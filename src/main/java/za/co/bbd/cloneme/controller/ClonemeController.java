@@ -1,5 +1,7 @@
 package za.co.bbd.cloneme.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,23 +24,27 @@ import java.util.Map;
 @Slf4j
 @RestController
 @CrossOrigin
+@Tag(name = "Clone Me", description = "Clone me errands endpoints")
 public class ClonemeController {
 
     @Autowired
     private ClonemeService clonemeService;
 
     @GetMapping("/errand")
+    @Operation(description = "Get all user errands.")
     public List<ErrandDto> getErrand(@RequestParam(required = false) Long errandId) {
         log.info("Getting errands");
         return clonemeService.getErrand(errandId);
     }
     @PostMapping(value = "/errand", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @Operation(description = "create a user errand.")
     public ErrandDto postErrand(@RequestParam("file") MultipartFile file, @RequestParam("fileName") String fileName) {
         log.info("Creating errand with voicenote: {}", fileName);
         return clonemeService.createErrand(file, fileName);
     }
 
     @PutMapping("/errand")
+    @Operation(description = "update a user errand.")
     public ErrandDto putErrand(@RequestBody ErrandDto errandDto) {
         log.info("Updating errand status {} ", errandDto);
         return clonemeService.updateErrand(errandDto.getId(), errandDto.getStatus());
